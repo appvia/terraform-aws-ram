@@ -17,14 +17,16 @@ The purpose of this module is to provide a building block for using AWS RAM (Res
 
 ## Usage
 
-Add example usage here
+See [examples](examples) for use cases
 
 ```hcl
-module "ram" {
+module "ram_ssm_param" {
   source  = "appvia/ram/aws"
   version = "0.0.1"
 
-  # insert variables here
+  name          = "share ssm parameter within org"
+  resource_arns = ["arn:aws:ssm:eu-west-2:123456789101:parameter/something_important"]
+  principals    = ["arn:aws:organizations::101987654321:organization/o-abcdef1234"]
 }
 ```
 
