@@ -12,9 +12,15 @@ resource "aws_ram_resource_association" "this" {
   resource_share_arn = aws_ram_resource_share.this.arn
 }
 
+# Add the accepter to ensure the share is active
+resource "aws_ram_resource_share_accepter" "this" {
+  share_arn = aws_ram_resource_share.this.arn
+}
+
 resource "aws_ram_principal_association" "this" {
   for_each = { for idx, principal in var.principals : idx => principal }
 
+  depends_on         = [aws_ram_resource_share_accepter.this]
   principal          = each.value
   resource_share_arn = aws_ram_resource_share.this.arn
 }
