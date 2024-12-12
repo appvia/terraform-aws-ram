@@ -4,17 +4,35 @@
 # to build your own root module that invokes this module
 #####################################################################################
 
-module "share_to_principal" {
-  source        = "../../"
-  name          = "share subnets to dev account"
-  resource_arns = ["arn:aws:ec2:eu-west-2:123456789101:subnet/subnet-11111111111", "arn:aws:ec2:eu-west-2:123456789101:subnet/subnet-22222222222"]
-  principals    = ["101987654321"]
+module "ram_share" {
+  source = "../../"
+
+  name = "example-external-share"
+
+  # External principal example - using 12-digit account ID
+  principals = [
+    "111111111111" # Replace with actual account ID
+  ]
+
+  # Example resources to share - using proper ARN format
+  resource_arns = [
+    "arn:aws:ec2:us-west-2:222222222222:subnet/subnet-1234567890abcdef0"
+  ]
+
+  allow_external_principals = true
+
   tags = {
-    OwnedBy = "my_department"
+    Environment = "example"
+    Purpose     = "external-sharing"
   }
+
+  # Optional: If you need specific permissions
+  permission_arns = [
+    "arn:aws:ram::111111111111:permission/AWSRAMDefaultPermissionSubnet"
+  ]
 }
 
 resource "aws_ram_resource_share_accepter" "receiver_accept" {
   provider  = aws.accepter
-  share_arn = module.share_to_principal.resource_share_arn
+  share_arn = module.ram_share.resource_share_arn
 }
