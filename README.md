@@ -24,10 +24,27 @@ module "ram_ssm_param" {
   source  = "appvia/ram/aws"
   version = "0.0.1"
 
-  name          = "share ssm parameter within org"
-  resource_arns = ["arn:aws:ssm:eu-west-2:123456789101:parameter/something_important"]
-  principals    = ["arn:aws:organizations::101987654321:organization/o-abcdef1234"]
+  name = "share-ssm-parameter-within-org"
+
+  # Resource ARN for the SSM parameter to share
+  resource_arns = [
+    "arn:aws:ssm:eu-west-2:123456789101:parameter/something_important"
+  ]
+
+  # Organization principal ARN
+  principals = [
+    "arn:aws:organizations::101987654321:organization/o-abcdef1234"
+  ]
+
+  # Since we're sharing within org, keep external principals disabled
+  allow_external_principals = false
+
+  tags = {
+    Purpose = "SSM Parameter Sharing"
+    Scope   = "Organization"
+  }
 }
+
 ```
 
 ## Update Documentation
@@ -49,18 +66,18 @@ The `terraform-docs` utility is used to generate this README. Follow the below s
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_name"></a> [name](#input\_name) | The name of the resource share. | `string` | n/a | yes |
-| <a name="input_principals"></a> [principals](#input\_principals) | The principal to associate with the resource share. Possible values are an AWS account ID, an AWS Organizations Organization ARN, or an AWS Organizations Organization Unit ARN | `list(string)` | n/a | yes |
-| <a name="input_resource_arns"></a> [resource\_arns](#input\_resource\_arns) | The Amazon Resource Name (ARN) of the resource share. | `list(string)` | n/a | yes |
-| <a name="input_allow_external_principals"></a> [allow\_external\_principals](#input\_allow\_external\_principals) | Indicates whether principals outside your organization can be associated with a resource share. | `bool` | `true` | no |
-| <a name="input_permission_arns"></a> [permission\_arns](#input\_permission\_arns) | Specifies the Amazon Resource Names (ARNs) of the RAM permission to associate with the resource share. If you do not specify an ARN for the permission, RAM automatically attaches the default version of the permission for each resource type. You can associate only one permission with each resource type included in the resource share. | `list(string)` | `[]` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Tags map for aws\_ram\_resource\_share resource | `map(string)` | `{}` | no |
+| <a name="input_name"></a> [name](#input\_name) | The name of the resource share | `string` | n/a | yes |
+| <a name="input_principals"></a> [principals](#input\_principals) | The principals to associate with the resource share. Possible values are an AWS account ID, an AWS Organizations Organization ARN, or an AWS Organizations Organization Unit ARN. | `list(string)` | n/a | yes |
+| <a name="input_resource_arns"></a> [resource\_arns](#input\_resource\_arns) | List of Amazon Resource Names (ARNs) of the resources to associate with the RAM share. | `list(string)` | n/a | yes |
+| <a name="input_allow_external_principals"></a> [allow\_external\_principals](#input\_allow\_external\_principals) | Indicates whether principals outside your organization can be associated with a resource share. Default is false for security best practices. | `bool` | `false` | no |
+| <a name="input_permission_arns"></a> [permission\_arns](#input\_permission\_arns) | Specifies the Amazon Resource Names (ARNs) of the RAM permissions to associate with the resource share.<br/>If not specified, RAM automatically attaches the default version of the permission for each resource type.<br/>Only one permission can be associated with each resource type included in the resource share. | `list(string)` | `[]` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Key-value map of tags to assign to the RAM share resource. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_principal_association_arns"></a> [principal\_association\_arns](#output\_principal\_association\_arns) | The ARNs of the principal associations |
-| <a name="output_resource_association_arns"></a> [resource\_association\_arns](#output\_resource\_association\_arns) | The ARNs of the resource associations |
-| <a name="output_resource_share_arn"></a> [resource\_share\_arn](#output\_resource\_share\_arn) | The ARN of the created resource share |
+| <a name="output_accepter_status"></a> [accepter\_status](#output\_accepter\_status) | Status of the resource share accepter |
+| <a name="output_resource_association_arns"></a> [resource\_association\_arns](#output\_resource\_association\_arns) | ARNs of the resource associations |
+| <a name="output_resource_share_arn"></a> [resource\_share\_arn](#output\_resource\_share\_arn) | ARN of the resource share |
 <!-- END_TF_DOCS -->
