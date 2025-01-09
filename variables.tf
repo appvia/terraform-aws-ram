@@ -55,8 +55,8 @@ variable "permission_arns" {
   validation {
     condition = alltrue([
       for arn in var.permission_arns :
-      can(regex("^arn:aws:ram::[0-9]{12}:permission/.+$", arn))
+      can(regex("^arn:aws:ram::(?:aws|[0-9]{12}):permission/.+$", arn))
     ])
-    error_message = "Invalid permission ARN format. Must be a valid RAM permission ARN."
+    error_message = "Invalid permission ARN format. Must be a valid RAM permission ARN for either AWS-managed or customer-managed permissions."
   }
 }
