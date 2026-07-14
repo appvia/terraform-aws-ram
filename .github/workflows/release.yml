@@ -11,5 +11,5 @@ permissions:
 
 jobs:
   release:
-    uses: appvia/appvia-cicd-workflows/.github/workflows/terraform-module-release.yml@201431e5550813748bf123734a627a747ac0db3e # main
+    uses: appvia/appvia-cicd-workflows/.github/workflows/terraform-module-release.yml@6cccc47588f122c0abb76e46f8f636734607bc8b # main
     name: GitHub Release
