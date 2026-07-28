@@ -16,6 +16,10 @@ resource "aws_ram_resource_share" "this" {
   allow_external_principals = var.allow_external_principals
   permission_arns           = try(var.permission_arns, [])
   tags                      = can(var.tags) ? merge({ "Name" = var.name }, var.tags) : { "Name" = var.name }
+
+  resource_share_configuration {
+    retain_sharing_on_account_leave_organization = false
+  }
 }
 
 resource "aws_ram_resource_association" "this" {
